@@ -28,7 +28,9 @@ VERSION = pre-square
 
 CONFIG_DEVICE ?= g505s
 CONFIG_DEBUG ?= yes
-CONFIG = $(DEVICE)/config.mk
+
+DEVICE_CONFIG = $(DEVICE)/config.mk
+PLATFORM_CONFIG = $(PLATFORM)/config.mk
 
 # Directories
 
@@ -78,7 +80,8 @@ OUTPUT_DIRS = $(sort $(dir $(OUTPUT_BINARY) $(OUTPUT_IMAGE)))
 
 # Includes
 
--include $(CONFIG)
+-include $(DEVICE_CONFIG)
+-include $(PLATFORM_CONFIG)
 -include $(SOURCES_RULES)
 
 # Config

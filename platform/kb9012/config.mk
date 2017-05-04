@@ -13,14 +13,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Platform
+# Memory
 
-CONFIG_PLATFORM = kb9012
-
-# Console
-
-ifeq ($(CONFIG_DEBUG), yes)
-CONFIG_CONSOLE = yes
-CONFIG_CONSOLE_HELP = yes
-CONFIG_CONSOLE_HISTORY = yes
-endif
+CONFIG_MEMORY_MODEL = large
+CONFIG_XRAM_ADDRESS = 0xec00
+CONFIG_XRAM_SIZE = 0x1000
+CONFIG_CODE_SIZE = 0x10000
+CONFIG_IMAGE_SIZE = 0x20000
