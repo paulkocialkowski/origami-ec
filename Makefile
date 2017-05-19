@@ -98,6 +98,10 @@ endif
 
 all : $(OUTPUT_IMAGE)
 
+.PHONY: device
+device:
+	 @echo " DEVICE $(CONFIG_DEVICE)"
+
 $(BUILD_DIRS):
 	@mkdir -p $@
 
@@ -115,7 +119,7 @@ $(BUILD_OBJECTS): $(BUILD)/%.rel: %.c $(BUILD_VERSION_HEADER) Makefile $(SOURCES
 	@$(SED)  "s,$(notdir $*).rel,$(BUILD)/$*.rel,g" -i $(BUILD)/$*.d
 	@$(SDCC) $(CFLAGS) -c $< -o $(dir $@)
 
-$(BUILD_BINARY): $(BUILD_OBJECTS)
+$(BUILD_BINARY): device $(BUILD_OBJECTS)
 	@echo " LINK   $@"
 	@$(SDCC) $(LDFLAGS) -o $(BUILD_BINARY) $(BUILD_OBJECTS)
 
