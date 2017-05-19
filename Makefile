@@ -74,8 +74,8 @@ BUILD_DEPS = $(addprefix $(BUILD)/,$(DEPS))
 BUILD_BINARY = $(BUILD)/$(NAME)
 BUILD_DIRS = $(sort $(dir $(BUILD_BINARY) $(BUILD_OBJECTS)))
 
-OUTPUT_BINARY = $(OUTPUT)/$(NAME).bin
-OUTPUT_IMAGE = $(OUTPUT)/$(NAME).img
+OUTPUT_BINARY = $(OUTPUT)/$(NAME)-$(CONFIG_DEVICE).bin
+OUTPUT_IMAGE = $(OUTPUT)/$(NAME)-$(CONFIG_DEVICE).img
 OUTPUT_DIRS = $(sort $(dir $(OUTPUT_BINARY) $(OUTPUT_IMAGE)))
 
 # Includes
@@ -134,7 +134,6 @@ $(OUTPUT_IMAGE): $(OUTPUT_BINARY) | $(OUTPUT_DIRS)
 clean:
 	@echo " CLEAN"
 	@rm -f $(foreach object,$(basename $(BUILD_OBJECTS)),$(object)*) $(basename $(BUILD_BINARY))*
-	@rm -f $(OUTPUT_BINARY) $(OUTPUT_IMAGE)
 
 .PHONY: distclean
 distclean: clean
