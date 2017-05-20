@@ -31,14 +31,14 @@ signed char button_task(void)
 	button_event = 0;
 
 	if (button_pressed(BUTTON_POWER))
-		led_enable(LED_POWER, 1);
-	else
 		led_enable(LED_POWER, 0);
+	else
+		led_enable(LED_POWER, 1);
 
 	if (button_pressed(BUTTON_RECOVERY))
-		led_enable(LED_BATTERY_LOW, 1);
-	else
 		led_enable(LED_BATTERY_LOW, 0);
+	else
+		led_enable(LED_BATTERY_LOW, 1);
 
 	return 0;
 }
