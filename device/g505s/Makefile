@@ -1,1 +1,1 @@
-sources-device = button.c interrupts.c led.c switch.c
+sources-device = core.c button.c interrupts.c led.c switch.c
