@@ -17,7 +17,9 @@
 
 #include <kb9012/gpwu.h>
 #include <g505s/button.h>
+#include <g505s/switch.h>
 #include <button.h>
+#include <switch.h>
 
 void gpwu_interrupt_2(void) __interrupt(26)
 {
@@ -32,5 +34,11 @@ void gpwu_interrupt_5(void) __interrupt(30)
 	if (gpwu_event_pending(GPIO_BUTTON_POWER)) {
 		gpwu_event_clear(GPIO_BUTTON_POWER);
 		button_event = 1;
+	} else if (gpwu_event_pending(GPIO_SWITCH_INPUT_AC)) {
+		gpwu_event_clear(GPIO_SWITCH_INPUT_AC);
+		switch_event = 1;
+	} else if (gpwu_event_pending(GPIO_SWITCH_INPUT_LID)) {
+		gpwu_event_clear(GPIO_SWITCH_INPUT_LID);
+		switch_event = 1;
 	}
 }

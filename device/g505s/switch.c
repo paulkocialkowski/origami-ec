@@ -16,6 +16,7 @@
  */
 
 #include <kb9012/gpio.h>
+#include <kb9012/gpwu.h>
 #include <g505s/switch.h>
 #include <switch.h>
 
@@ -45,6 +46,12 @@ signed char switch_init(void)
 
 	rc |= gpio_input_enable(GPIO_SWITCH_INPUT_AC, 1);
 	rc |= gpio_input_enable(GPIO_SWITCH_INPUT_LID, 1);
+
+	rc |= gpwu_trigger_toggle(GPIO_SWITCH_INPUT_AC, 1);
+	rc |= gpwu_trigger_toggle(GPIO_SWITCH_INPUT_LID, 1);
+
+	rc |= gpwu_event_enable(GPIO_SWITCH_INPUT_AC, 1);
+	rc |= gpwu_event_enable(GPIO_SWITCH_INPUT_LID, 1);
 
 	return rc;
 }
