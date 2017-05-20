@@ -24,6 +24,7 @@
  * Functions
  */
 
+void gpwu_interrupt_2(void) __interrupt(26);
 void gpwu_interrupt_5(void) __interrupt(30);
 
 #endif

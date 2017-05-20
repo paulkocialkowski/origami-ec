@@ -19,6 +19,14 @@
 #include <g505s/button.h>
 #include <button.h>
 
+void gpwu_interrupt_2(void) __interrupt(26)
+{
+	if (gpwu_event_pending(GPIO_BUTTON_RECOVERY)) {
+		gpwu_event_clear(GPIO_BUTTON_RECOVERY);
+		button_event = 1;
+	}
+}
+
 void gpwu_interrupt_5(void) __interrupt(30)
 {
 	if (gpwu_event_pending(GPIO_BUTTON_POWER)) {
