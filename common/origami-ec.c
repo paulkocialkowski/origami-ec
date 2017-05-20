@@ -83,6 +83,10 @@ void tasks(void)
 		if (rc == 0)
 			continue;
 
+		rc = switch_task();
+		if (rc == 0)
+			continue;
+
 		rc = console_task();
 		if (rc == 0)
 			continue;

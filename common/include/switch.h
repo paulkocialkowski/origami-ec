@@ -29,6 +29,12 @@ enum {
 };
 
 /*
+ * Variables
+ */
+
+extern unsigned char switch_event;
+
+/*
  * API functions
  */
 
@@ -39,6 +45,8 @@ signed char switch_init(void);
 /*
  * Functions
  */
+
+signed char switch_task(void);
 
 #ifdef CONFIG_CONSOLE
 signed char switch_command(unsigned char argc, char **argv);

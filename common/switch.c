@@ -18,7 +18,25 @@
 #include <string.h>
 #include <serial.h>
 #include <switch.h>
+#include <led.h>
 #include <config.h>
+
+unsigned char switch_event = 1;
+
+signed char switch_task(void)
+{
+	if (!switch_event)
+		return -1;
+
+	switch_event = 0;
+
+	if (switch_status(SWITCH_INPUT_LID))
+		led_enable(LED_BATTERY_CHARGING, 1);
+	else
+		led_enable(LED_BATTERY_CHARGING, 0);
+
+	return 0;
+}
 
 #ifdef CONFIG_CONSOLE
 signed char switch_command(unsigned char argc, char **argv)
