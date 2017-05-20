@@ -78,8 +78,6 @@ void tasks(void)
 {
 	signed char rc;
 
-	unsigned char count = 0;
-
 	while (1) {
 		rc = button_task();
 		if (rc == 0)
