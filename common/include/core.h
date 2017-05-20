@@ -51,5 +51,6 @@ enum {
  */
 
 void suspend(unsigned char type);
+void reset(void);
 
 #endif

@@ -31,6 +31,7 @@
 
 #ifdef CONFIG_CONSOLE
 signed char version_command(unsigned char argc, char **argv);
+signed char reset_command(unsigned char argc, char **argv);
 #endif
 
 #endif

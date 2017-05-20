@@ -55,6 +55,8 @@ static char *console_command_string(unsigned char command)
 			return "switch";
 		case COMMAND_DEBUG:
 			return "debug";
+		case COMMAND_RESET:
+			return "reset";
 		default:
 			return NULL;
 	}
@@ -77,6 +79,8 @@ static signed char console_command_call(unsigned char command, unsigned char arg
 			return switch_command(argc, argv);
 		case COMMAND_DEBUG:
 			return debug_command(argc, argv);
+		case COMMAND_RESET:
+			return reset_command(argc, argv);
 		default:
 			return -1;
 	}
