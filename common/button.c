@@ -21,7 +21,7 @@
 #include <led.h>
 #include <config.h>
 
-unsigned char button_event = 0;
+unsigned char button_event = 1;
 
 signed char button_task(void)
 {
