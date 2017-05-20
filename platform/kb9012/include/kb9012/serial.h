@@ -30,8 +30,8 @@
  * The reference used is: 32768 for 1155 bauds at 32 MHz,
  * the equation was also simplified (32768 / 32 = 1024), to avoid overflow.
  */
-#define SCON_COUNTER(baud) \
-	(((CONFIG_CLOCK / 1000000) * 1024 * 1155) / baud)
+#define SCON_COUNTER(baud, clock) \
+	(((clock / 1000000) * 1024 * 1155) / baud)
 
 /*
  * Registers

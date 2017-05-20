@@ -23,13 +23,14 @@
  */
 
 #define EC_CLKCFG_CLOCK(clock) \
-	(((clock / EC_CLKCFG_CLOCK_BASE) - 1) << 2)
+	(((clock / EC_CLKCFG_CLOCK_BASE) - 1) << EC_CLKCFG_CLOCK_SHIFT)
 
 /*
  * Registers
  */
 
 __sfr __at(0x86) PCON2;
+__sfr __at(0xb0) P3IE;
 
 #define EC_PMUCFG						0xff0c
 #define EC_CLKCFG						0xff0d
@@ -40,12 +41,20 @@ __sfr __at(0x86) PCON2;
 
 #define PCON2_EXTERNAL_MODULES_ENABLE				(1 << 4)
 
-#define IE_ENABLE_ALL						(1 << 7)
-#define IE_ENABLE_SERIAL					(1 << 4)
+#define PCON_STOP_ENABLE					(1 << 1)
+#define PCON_IDLE_ENABLE					(1 << 0)
+
+#define IE_ALL_ENABLE						(1 << 7)
+#define IE_SERIAL_ENABLE					(1 << 4)
 
 #define EC_PMUCFG_STOP						(1 << 7)
 #define EC_PMUCFG_IDLE						(1 << 6)
+#define EC_PMUCFG_STOP_WAKEUP_GPWU				(1 << 1)
+#define EC_PMUCFG_IDLE_WAKEUP_INTERRUPT				(1 << 0)
 
+#define EC_CLKCFG_FLASH_CLOCK_FULL				(1 << 6)
+#define EC_CLKCFG_CLOCK_SHIFT					2
+#define EC_CLKCFG_CLOCK_MASK					0x03
 #define EC_CLKCFG_CLOCK_BASE					8000000
 
 #endif

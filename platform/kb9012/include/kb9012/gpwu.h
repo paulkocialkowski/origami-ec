@@ -22,8 +22,6 @@
  * Registers
  */
 
-__sfr __at(0xb0) P3IE;
-
 #define GPWU_EN_BASE						0xff30
 #define GPWU_PF_BASE						0xff40
 #define GPWU_PS_BASE						0xff50
@@ -57,5 +55,7 @@ signed char gpwu_event_clear(unsigned char gpio);
 signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high);
 signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level);
 signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable);
+void gpwu_suspend(void);
+void gpwu_resume(void);
 
 #endif

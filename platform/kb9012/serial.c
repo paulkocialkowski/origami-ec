@@ -31,14 +31,14 @@ static char serial_recv_buffer[8];
 static unsigned char serial_recv_count;
 static unsigned char serial_recv_start;
 
-static void serial_interrupt_enable(void)
+static inline void serial_interrupt_enable(void)
 {
-	IE |= IE_ENABLE_SERIAL;
+	IE |= IE_SERIAL_ENABLE;
 }
 
-static void serial_interrupt_disable(void)
+static inline void serial_interrupt_disable(void)
 {
-	IE &= ~IE_ENABLE_SERIAL;
+	IE &= ~IE_SERIAL_ENABLE;
 }
 
 void serial_interrupt(void) __interrupt(4)
@@ -88,7 +88,7 @@ signed char serial_send(char c)
 	serial_interrupt_disable();
 
 	if (serial_send_busy) {
-		/* Buffer overflow */
+		/* Buffer overflow. */
 		if (serial_send_count == sizeof(serial_send_buffer))
 			goto complete;
 
@@ -139,6 +139,20 @@ unsigned char serial_recv_available(void)
 	return serial_recv_count;
 }
 
+void serial_suspend(void)
+{
+	while (serial_send_busy) ;
+
+	SCON2 = (SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK_IDLE) >> 8) & 0xff;
+	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK_IDLE) & 0xff;
+}
+
+void serial_resume(void)
+{
+	SCON2 = (SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) >> 8) & 0xff;
+	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) & 0xff;
+}
+
 signed char serial_init(void)
 {
 	serial_send_count = 0;
@@ -148,8 +162,8 @@ signed char serial_init(void)
 	serial_recv_count = 0;
 	serial_recv_start = 0;
 
-	SCON2 = (SCON_COUNTER(CONFIG_SERIAL_BAUDRATE) >> 8) & 0xff;
-	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE) & 0xff;
+	SCON2 = (SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) >> 8) & 0xff;
+	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) & 0xff;
 
 	gpio_function_selection(GPIO_E51TXD, 1);
 	gpio_output_enable(GPIO_E51TXD, 1);

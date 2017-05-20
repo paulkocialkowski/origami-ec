@@ -21,6 +21,8 @@
 #include <kb9012/gpio.h>
 #include <core.h>
 
+static unsigned char gpwu_save[32];
+
 static unsigned char gpwu_register_offset(unsigned char gpio)
 {
 	unsigned char base;
@@ -113,13 +115,13 @@ static signed char gpwu_interrupt_enable(unsigned char gpio, unsigned char enabl
 		P3IE &= ~flag;
 
 	return 0;
-
 }
 
 signed char gpwu_event_enable(unsigned char gpio, unsigned char enable)
 {
 	signed char rc = 0;
 
+	rc |= gpwu_event_clear(gpio);
 	rc |= gpwu_register_enable(gpio, GPWU_EN_BASE, enable);
 	rc |= gpwu_interrupt_enable(gpio, enable);
 
@@ -149,4 +151,26 @@ signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level)
 signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable)
 {
 	return gpwu_register_enable(gpio, GPWU_CH_BASE, enable);
+}
+
+void gpwu_suspend(void)
+{
+	unsigned short address;
+	unsigned char i;
+
+	address = GPWU_EN_BASE;
+
+	for (i = 0; i < sizeof(gpwu_save) / sizeof(unsigned char); i++)
+		gpwu_save[i] = register_read(address++);
+}
+
+void gpwu_resume(void)
+{
+	unsigned short address;
+	unsigned char i;
+
+	address = GPWU_EN_BASE;
+
+	for (i = 0; i < sizeof(gpwu_save) / sizeof(unsigned char); i++)
+		register_write(address++, gpwu_save[i]);
 }

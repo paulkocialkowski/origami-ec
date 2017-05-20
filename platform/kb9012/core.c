@@ -17,13 +17,25 @@
 
 #include <8051.h>
 #include <kb9012/core.h>
+#include <kb9012/gpwu.h>
+#include <kb9012/serial.h>
+#include <g505s/button.h>
 #include <core.h>
 #include <config.h>
-
+#include <serial.h>
 
 void suspend(unsigned char type)
 {
 	unsigned char value;
+
+	gpwu_suspend();
+	serial_suspend();
+
+	/* Clock configuration to idle. */
+	value = register_read(EC_CLKCFG);
+	value = value_mask_clear(value, EC_CLKCFG_CLOCK_MASK, EC_CLKCFG_CLOCK_SHIFT);
+	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK_IDLE);
+	register_write(EC_CLKCFG, value);
 
 	if (type == SUSPEND_TYPE_STOP) {
 		value = register_read(EC_PMUCFG);
@@ -34,22 +46,37 @@ void suspend(unsigned char type)
 		value |= EC_PMUCFG_IDLE;
 		register_write(EC_PMUCFG, value);
 	}
+
+	/* Clock configuration to normal. */
+	value = register_read(EC_CLKCFG);
+	value = value_mask_clear(value, EC_CLKCFG_CLOCK_MASK, EC_CLKCFG_CLOCK_SHIFT);
+	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK);
+	register_write(EC_CLKCFG, value);
+
+	serial_resume();
+	gpwu_resume();
 }
 
 unsigned char _sdcc_external_startup(void)
 {
 	unsigned char value;
 
-	/* Access to external modules */
+	/* Access to external modules. */
 	PCON2 |= PCON2_EXTERNAL_MODULES_ENABLE;
 
-	/* Clock configuration */
+	/* Clock configuration. */
 	value = register_read(EC_CLKCFG);
-	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK);
+	value = value_mask_clear(value, EC_CLKCFG_CLOCK_MASK, EC_CLKCFG_CLOCK_SHIFT);
+	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK) | EC_CLKCFG_FLASH_CLOCK_FULL;
 	register_write(EC_CLKCFG, value);
 
-	/* Interrupts enable */
-	IE |= IE_ENABLE_ALL;
+	/* Idle suspend wakeup. */
+	value = register_read(EC_PMUCFG);
+	value = EC_PMUCFG_STOP_WAKEUP_GPWU | EC_PMUCFG_IDLE_WAKEUP_INTERRUPT;
+	register_write(EC_PMUCFG, value);
+
+	/* Interrupts enable. */
+	IE |= IE_ALL_ENABLE;
 
 	return 0;
 }

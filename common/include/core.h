@@ -22,6 +22,9 @@
  * Macros
  */
 
+#define value_mask_clear(value, mask, offset) \
+	(value & ~(mask << offset))
+
 #define register_read(address) \
 	*((volatile unsigned char __xdata *) address)
 

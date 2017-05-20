@@ -34,6 +34,8 @@ signed char serial_send(char c);
 char serial_recv(void);
 unsigned char serial_send_available(void);
 unsigned char serial_recv_available(void);
+void serial_suspend(void);
+void serial_resume(void);
 signed char serial_init(void);
 
 /*

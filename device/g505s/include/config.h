@@ -30,6 +30,7 @@
  */
 
 #define CONFIG_CLOCK						32000000
+#define CONFIG_CLOCK_IDLE					8000000
 
 /*
  * Serial
