@@ -94,6 +94,10 @@ ifneq ($(CONFIG_CODE_SIZE),)
 LDFLAGS += --code-size $(CONFIG_CODE_SIZE)
 endif
 
+ifneq ($(CONFIG_STACK_AUTO),)
+CFLAGS += --stack-auto
+endif
+
 # Rules
 
 all : $(OUTPUT_IMAGE)
