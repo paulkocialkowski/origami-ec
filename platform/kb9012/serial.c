@@ -22,14 +22,16 @@
 #include <serial.h>
 #include <config.h>
 
-static char serial_send_buffer[8];
-static unsigned char serial_send_count;
-static unsigned char serial_send_start;
-static unsigned char serial_send_busy;
+#pragma codeseg CSEGP
 
-static char serial_recv_buffer[8];
-static unsigned char serial_recv_count;
-static unsigned char serial_recv_start;
+char serial_send_buffer[8];
+unsigned char serial_send_count;
+unsigned char serial_send_start;
+unsigned char serial_send_busy;
+
+char serial_recv_buffer[8];
+unsigned char serial_recv_count;
+unsigned char serial_recv_start;
 
 static inline void serial_interrupt_enable(void)
 {
@@ -41,41 +43,7 @@ static inline void serial_interrupt_disable(void)
 	IE &= ~IE_SERIAL_ENABLE;
 }
 
-void serial_interrupt(void) __interrupt(4)
-{
-	unsigned char index;
-
-	if (TI) {
-		TI = 0;
-
-		if (serial_send_count > 0) {
-			SBUF = serial_send_buffer[serial_send_start];
-			serial_send_count--;
-
-			serial_send_start++;
-			if (serial_send_start == sizeof(serial_send_buffer))
-				serial_send_start = 0;
-		} else {
-			serial_send_busy = 0;
-		}
-	}
-
-	if (RI) {
-		RI = 0;
-
-		if (serial_recv_count == sizeof(serial_recv_buffer))
-			return;
-
-		index = (serial_recv_start + serial_recv_count);
-		if (index >= sizeof(serial_recv_buffer))
-			index -= sizeof(serial_recv_buffer);
-
-		serial_recv_buffer[index] = SBUF;
-		serial_recv_count++;
-	}
-}
-
-signed char serial_send(char c)
+signed char serial_send(char c) __banked
 {
 	unsigned char index;
 
@@ -109,7 +77,7 @@ complete:
 	return 0;
 }
 
-char serial_recv(void)
+char serial_recv(void) __banked
 {
 	char c;
 
@@ -129,17 +97,17 @@ char serial_recv(void)
 	return c;
 }
 
-unsigned char serial_send_available(void)
+unsigned char serial_send_available(void) __banked
 {
 	return (sizeof(serial_send_buffer) - serial_send_count);
 }
 
-unsigned char serial_recv_available(void)
+unsigned char serial_recv_available(void) __banked
 {
 	return serial_recv_count;
 }
 
-void serial_suspend(void)
+void serial_suspend(void) __banked
 {
 	while (serial_send_busy) ;
 
@@ -147,13 +115,13 @@ void serial_suspend(void)
 	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK_IDLE) & 0xff;
 }
 
-void serial_resume(void)
+void serial_resume(void) __banked
 {
 	SCON2 = (SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) >> 8) & 0xff;
 	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) & 0xff;
 }
 
-signed char serial_init(void)
+signed char serial_init(void) __banked
 {
 	serial_send_count = 0;
 	serial_send_start = 0;

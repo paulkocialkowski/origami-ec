@@ -58,12 +58,12 @@
  * Functions
  */
 
-signed char gpio_function_selection(unsigned char gpio, unsigned char alternative);
-signed char gpio_output_enable(unsigned char gpio, unsigned char enable);
-signed char gpio_input_enable(unsigned char gpio, unsigned char enable);
-signed char gpio_output_data(unsigned char gpio, unsigned char data);
-signed char gpio_input_data(unsigned char gpio);
-signed char gpio_pull_up(unsigned char gpio, unsigned char enable);
-signed char gpio_open_drain(unsigned char gpio, unsigned char enable);
+signed char gpio_function_selection(unsigned char gpio, unsigned char alternative) __banked;
+signed char gpio_output_enable(unsigned char gpio, unsigned char enable) __banked;
+signed char gpio_input_enable(unsigned char gpio, unsigned char enable) __banked;
+signed char gpio_output_data(unsigned char gpio, unsigned char data) __banked;
+signed char gpio_input_data(unsigned char gpio) __banked;
+signed char gpio_pull_up(unsigned char gpio, unsigned char enable) __banked;
+signed char gpio_open_drain(unsigned char gpio, unsigned char enable) __banked;
 
 #endif

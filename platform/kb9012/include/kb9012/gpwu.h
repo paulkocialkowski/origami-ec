@@ -49,13 +49,13 @@
  * Functions
  */
 
-signed char gpwu_event_enable(unsigned char gpio, unsigned char enable);
-signed char gpwu_event_pending(unsigned char gpio);
-signed char gpwu_event_clear(unsigned char gpio);
-signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high);
-signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level);
-signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable);
-void gpwu_suspend(void);
-void gpwu_resume(void);
+signed char gpwu_event_enable(unsigned char gpio, unsigned char enable) __banked;
+signed char gpwu_event_pending(unsigned char gpio) __banked;
+signed char gpwu_event_clear(unsigned char gpio) __banked;
+signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high) __banked;
+signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level) __banked;
+signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable) __banked;
+void gpwu_suspend(void) __banked;
+void gpwu_resume(void) __banked;
 
 #endif

@@ -13,4 +13,5 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-sources-platform = core.c gpio.c gpwu.c serial.c
+sources-platform = interrupts.c core.c gpio.c gpwu.c serial.c
+asm-platform = banking.asm

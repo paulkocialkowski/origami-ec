@@ -20,7 +20,9 @@
 #include <g505s/button.h>
 #include <button.h>
 
-char button_pressed(unsigned char button)
+#pragma codeseg CSEGD
+
+char button_pressed(unsigned char button) __banked
 {
 	switch (button) {
 		case BUTTON_POWER:
@@ -32,7 +34,7 @@ char button_pressed(unsigned char button)
 	}
 }
 
-signed char button_init(void)
+signed char button_init(void) __banked
 {
 	signed char rc = 0;
 

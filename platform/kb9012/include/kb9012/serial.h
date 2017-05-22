@@ -50,4 +50,17 @@ __sfr __at(0x9b) SCON3;
 #define SCON_8BIT_SHIFT_REGISTER_OSC				(0 << 6)
 #define SCON_RECEIVE_ENABLE					(1 << 4)
 
+/*
+ * Variables
+ */
+
+extern char serial_send_buffer[8];
+extern unsigned char serial_send_count;
+extern unsigned char serial_send_start;
+extern unsigned char serial_send_busy;
+
+extern char serial_recv_buffer[8];
+extern unsigned char serial_recv_count;
+extern unsigned char serial_recv_start;
+
 #endif

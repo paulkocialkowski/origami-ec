@@ -19,7 +19,9 @@
 #include <g505s/led.h>
 #include <led.h>
 
-signed char led_enable(unsigned char led, unsigned char enable)
+#pragma codeseg CSEGD
+
+signed char led_enable(unsigned char led, unsigned char enable) __banked
 {
 	/* LED GPIO outputs are active low. */
 	unsigned char data = !enable;
@@ -40,7 +42,7 @@ signed char led_enable(unsigned char led, unsigned char enable)
 	}
 }
 
-signed char led_init(void)
+signed char led_init(void) __banked
 {
 	signed char rc = 0;
 

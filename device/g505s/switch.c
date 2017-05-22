@@ -20,7 +20,9 @@
 #include <g505s/switch.h>
 #include <switch.h>
 
-signed char switch_enable(unsigned char switch_output, unsigned char enable)
+#pragma codeseg CSEGD
+
+signed char switch_enable(unsigned char switch_output, unsigned char enable) __banked
 {
 	switch_output;
 	enable;
@@ -28,7 +30,7 @@ signed char switch_enable(unsigned char switch_output, unsigned char enable)
 	return -1;
 }
 
-unsigned char switch_status(unsigned char switch_input)
+unsigned char switch_status(unsigned char switch_input) __banked
 {
 	switch (switch_input) {
 		case SWITCH_INPUT_AC:
@@ -40,7 +42,7 @@ unsigned char switch_status(unsigned char switch_input)
 	}
 }
 
-signed char switch_init(void)
+signed char switch_init(void) __banked
 {
 	signed char rc = 0;
 

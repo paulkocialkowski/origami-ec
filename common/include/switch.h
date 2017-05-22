@@ -38,9 +38,9 @@ extern unsigned char switch_event;
  * API functions
  */
 
-signed char switch_enable(unsigned char switch_output, unsigned char enable);
-unsigned char switch_status(unsigned char switch_input);
-signed char switch_init(void);
+signed char switch_enable(unsigned char switch_output, unsigned char enable) __banked;
+unsigned char switch_status(unsigned char switch_input) __banked;
+signed char switch_init(void) __banked;
 
 /*
  * Functions

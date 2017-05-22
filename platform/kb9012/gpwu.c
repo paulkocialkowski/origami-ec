@@ -21,6 +21,8 @@
 #include <kb9012/gpio.h>
 #include <core.h>
 
+#pragma codeseg CSEGP
+
 static unsigned char gpwu_save[32];
 
 static unsigned char gpwu_register_offset(unsigned char gpio)
@@ -117,7 +119,7 @@ static signed char gpwu_interrupt_enable(unsigned char gpio, unsigned char enabl
 	return 0;
 }
 
-signed char gpwu_event_enable(unsigned char gpio, unsigned char enable)
+signed char gpwu_event_enable(unsigned char gpio, unsigned char enable) __banked
 {
 	signed char rc = 0;
 
@@ -128,32 +130,32 @@ signed char gpwu_event_enable(unsigned char gpio, unsigned char enable)
 	return rc;
 }
 
-signed char gpwu_event_pending(unsigned char gpio)
+signed char gpwu_event_pending(unsigned char gpio) __banked
 {
 	return gpwu_register_check(gpio, GPWU_PF_BASE);
 }
 
-signed char gpwu_event_clear(unsigned char gpio)
+signed char gpwu_event_clear(unsigned char gpio) __banked
 {
 	return gpwu_register_enable(gpio, GPWU_PF_BASE, 1);
 }
 
-signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high)
+signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high) __banked
 {
 	return gpwu_register_enable(gpio, GPWU_PS_BASE, high);
 }
 
-signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level)
+signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level) __banked
 {
 	return gpwu_register_enable(gpio, GPWU_EL_BASE, level);
 }
 
-signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable)
+signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable) __banked
 {
 	return gpwu_register_enable(gpio, GPWU_CH_BASE, enable);
 }
 
-void gpwu_suspend(void)
+void gpwu_suspend(void) __banked
 {
 	unsigned short address;
 	unsigned char i;
@@ -164,7 +166,7 @@ void gpwu_suspend(void)
 		gpwu_save[i] = register_read(address++);
 }
 
-void gpwu_resume(void)
+void gpwu_resume(void) __banked
 {
 	unsigned short address;
 	unsigned char i;

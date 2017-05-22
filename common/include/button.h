@@ -38,8 +38,8 @@ extern unsigned char button_event;
  * API functions
  */
 
-char button_pressed(unsigned char button);
-signed char button_init(void);
+char button_pressed(unsigned char button) __banked;
+signed char button_init(void) __banked;
 
 /*
  * Functions

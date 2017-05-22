@@ -15,37 +15,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SERIAL_H_
-#define _SERIAL_H_
+#include <8051.h>
+#include <kb9012/serial.h>
 
-#include <stdio.h>
+void serial_interrupt(void) __interrupt(4)
+{
+	unsigned char index;
 
-/*
- * Macros
- */
+	if (TI) {
+		TI = 0;
 
-#define serial_printf				printf
+		if (serial_send_count > 0) {
+			SBUF = serial_send_buffer[serial_send_start];
+			serial_send_count--;
 
-/*
- * API functions
- */
+			serial_send_start++;
+			if (serial_send_start == sizeof(serial_send_buffer))
+				serial_send_start = 0;
+		} else {
+			serial_send_busy = 0;
+		}
+	}
 
-signed char serial_send(char c) __banked;
-char serial_recv(void) __banked;
-unsigned char serial_send_available(void) __banked;
-unsigned char serial_recv_available(void) __banked;
-void serial_suspend(void) __banked;
-void serial_resume(void) __banked;
-signed char serial_init(void) __banked;
+	if (RI) {
+		RI = 0;
 
-/*
- * Functions
- */
+		if (serial_recv_count == sizeof(serial_recv_buffer))
+			return;
 
-void putchar(char c);
-signed char serial_putc(char c);
-signed char serial_puts(const char *string);
-signed char serial_print(const char *string);
-signed char serial_printnl(const char *string);
+		index = (serial_recv_start + serial_recv_count);
+		if (index >= sizeof(serial_recv_buffer))
+			index -= sizeof(serial_recv_buffer);
 
-#endif
+		serial_recv_buffer[index] = SBUF;
+		serial_recv_count++;
+	}
+}

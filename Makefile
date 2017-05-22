@@ -16,6 +16,7 @@
 # Tools
 
 SDCC ?= sdcc
+SDAS8051 ?= sdas8051
 OBJCOPY ?= objcopy
 SED ?= sed
 
@@ -43,33 +44,41 @@ OUTPUT = output
 
 # Sources
 
-SOURCES_DIRS = $(COMMON) $(DEVICE) $(PLATFORM)
-SOURCES_RULES = $(addsuffix /Makefile,$(SOURCES_DIRS))
+DIRS = $(COMMON) $(DEVICE) $(PLATFORM)
+RULES = $(addsuffix /Makefile,$(DIRS))
 
 SOURCES_COMMON = $(addprefix $(COMMON)/,$(sources-common))
 SOURCES_DEVICE = $(addprefix $(DEVICE)/,$(sources-device))
 SOURCES_PLATFORM = $(addprefix $(PLATFORM)/,$(sources-platform))
 
+ASM_COMMON = $(addprefix $(COMMON)/,$(asm-common))
+ASM_DEVICE = $(addprefix $(DEVICE)/,$(asm-device))
+ASM_PLATFORM = $(addprefix $(PLATFORM)/,$(asm-platform))
+
 SOURCES = $(SOURCES_COMMON) $(SOURCES_DEVICE) $(SOURCES_PLATFORM)
-OBJECTS = $(SOURCES:.c=.rel)
+ASM = $(ASM_COMMON) $(ASM_DEVICE) $(ASM_PLATFORM)
+OBJECTS_SOURCES = $(SOURCES:.c=.rel)
+OBJECTS_ASM = $(ASM:.asm=.rel)
 DEPS = $(SOURCES:.c=.d)
 
 # Compiler
 
-INCLUDES = $(dir $(BUILD_VERSION_HEADER)) $(addsuffix /include,$(SOURCES_DIRS))
+INCLUDES = $(dir $(BUILD_VERSION_HEADER)) $(addsuffix /include,$(DIRS))
 DEFINES = $(config-defines)
 
 CFLAGS = --std-c99 -mmcs51 --model-$(CONFIG_MEMORY_MODEL)
 CFLAGS += $(foreach include,$(INCLUDES),-I$(include))
 CFLAGS += $(foreach define,$(DEFINES),-D$(define))
 
-LDFLAGS = --out-fmt-ihx -mmcs51 --model-$(CONFIG_MEMORY_MODEL)
+LDFLAGS = --out-fmt-ihx -mmcs51 --model-$(CONFIG_MEMORY_MODEL) -Wl -r
 
 # Produced files
 
 BUILD_VERSION_HEADER = $(BUILD)/version.h
 
-BUILD_OBJECTS = $(addprefix $(BUILD)/,$(OBJECTS))
+BUILD_OBJECTS_SOURCES = $(addprefix $(BUILD)/,$(OBJECTS_SOURCES))
+BUILD_OBJECTS_ASM = $(addprefix $(BUILD)/,$(OBJECTS_ASM))
+BUILD_OBJECTS = $(BUILD_OBJECTS_SOURCES) $(BUILD_OBJECTS_ASM)
 BUILD_DEPS = $(addprefix $(BUILD)/,$(DEPS))
 BUILD_BINARY = $(BUILD)/$(NAME)
 BUILD_DIRS = $(sort $(dir $(BUILD_BINARY) $(BUILD_OBJECTS)))
@@ -82,7 +91,7 @@ OUTPUT_DIRS = $(sort $(dir $(OUTPUT_BINARY) $(OUTPUT_IMAGE)))
 
 -include $(DEVICE_CONFIG)
 -include $(PLATFORM_CONFIG)
--include $(SOURCES_RULES)
+-include $(RULES)
 
 # Config
 
@@ -93,6 +102,18 @@ endif
 ifneq ($(CONFIG_CODE_SIZE),)
 LDFLAGS += --code-size $(CONFIG_CODE_SIZE)
 endif
+
+ifneq ($(CONFIG_CODE_SEGMENT_CSEGD),)
+LDFLAGS += -Wl "-b CSEGD = $(CONFIG_CODE_SEGMENT_CSEGD)"
+endif
+
+ifneq ($(CONFIG_CODE_SEGMENT_CSEGP),)
+LDFLAGS += -Wl "-b CSEGP = $(CONFIG_CODE_SEGMENT_CSEGP)"
+endif
+ 
+# Macros
+
+segmentcheck = test ! -z $(2) || true && grep l_$(1) $(BUILD_BINARY).map | $(SED) "s/[^[:space:]]*[[:space:]]*\([0-9A-F]*\).*/(( 0x\1 <= $(3) ))/g" | sh || ( echo "Segment $(1) is out of bounds" && false )
 
 # Rules
 
@@ -113,15 +134,22 @@ $(BUILD_VERSION_HEADER): | $(BUILD_DIRS)
 	@echo "#define VERSION \"$(VERSION)\"" >> $@
 	@echo "#endif" >> $@
 
-$(BUILD_OBJECTS): $(BUILD)/%.rel: %.c $(BUILD_VERSION_HEADER) Makefile $(SOURCES_RULES) $(CONFIG) | $(BUILD_DIRS)
+$(BUILD_OBJECTS_SOURCES): $(BUILD)/%.rel: %.c $(BUILD_VERSION_HEADER) Makefile $(RULES) $(DEVICE_CONFIG) $(PLATFORM_CONFIG) | $(BUILD_DIRS)
 	@echo " CC     $<"
 	@$(SDCC) $(CFLAGS) -MMD -c $< -o $(BUILD)/$*.d
 	@$(SED)  "s,$(notdir $*).rel,$(BUILD)/$*.rel,g" -i $(BUILD)/$*.d
 	@$(SDCC) $(CFLAGS) -c $< -o $(dir $@)
 
-$(BUILD_BINARY): device $(BUILD_OBJECTS)
+$(BUILD_OBJECTS_ASM): $(BUILD)/%.rel: %.asm Makefile $(RULES) | $(BUILD_DIRS)
+	@echo " ASM    $<"
+	@$(SDAS8051) -losg $@ $<
+
+$(BUILD_BINARY): device $(BUILD_OBJECTS_SOURCES) $(BUILD_OBJECTS_ASM)
 	@echo " LINK   $@"
 	@$(SDCC) $(LDFLAGS) -o $(BUILD_BINARY) $(BUILD_OBJECTS)
+	@$(call segmentcheck,CSEG,0,$(CONFIG_CODE_PRIMARY_SIZE))
+	@$(call segmentcheck,CSEGD,$(CONFIG_CODE_SEGMENT_CSEGD),$(CONFIG_CODE_SEGMENT_SIZE))
+	@$(call segmentcheck,CSEGP,$(CONFIG_CODE_SEGMENT_CSEGP),$(CONFIG_CODE_SEGMENT_SIZE))
 
 $(OUTPUT_DIRS):
 	@mkdir -p $@

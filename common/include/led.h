@@ -35,8 +35,8 @@ enum {
  * API functions
  */
 
-signed char led_enable(unsigned char led, unsigned char enable);
-signed char led_init(void);
+signed char led_enable(unsigned char led, unsigned char enable) __banked;
+signed char led_init(void) __banked;
 
 /*
  * Functions
