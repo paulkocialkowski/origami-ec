@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_SERIAL
+#include <segment.h>
 #include <serial.h>
 
 void putchar(char c)

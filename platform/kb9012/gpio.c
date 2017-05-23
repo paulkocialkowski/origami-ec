@@ -15,12 +15,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_PLATFORM
+#include <segment.h>
 #include <8051.h>
 #include <kb9012/core.h>
 #include <kb9012/gpio.h>
 #include <core.h>
-
-#pragma codeseg CSEGP
 
 static unsigned char gpio_register_offset(unsigned char gpio)
 {
@@ -90,37 +90,37 @@ static signed char gpio_register_check(unsigned char gpio, unsigned short base)
 	return value;
 }
 
-signed char gpio_function_selection(unsigned char gpio, unsigned char alternative) __banked
+signed char gpio_function_selection(unsigned char gpio, unsigned char alternative)
 {
 	return gpio_register_enable(gpio, GPIO_FS_BASE, alternative);
 }
 
-signed char gpio_output_enable(unsigned char gpio, unsigned char enable) __banked
+signed char gpio_output_enable(unsigned char gpio, unsigned char enable)
 {
 	return gpio_register_enable(gpio, GPIO_OE_BASE, enable);
 }
 
-signed char gpio_input_enable(unsigned char gpio, unsigned char enable) __banked
+signed char gpio_input_enable(unsigned char gpio, unsigned char enable)
 {
 	return gpio_register_enable(gpio, GPIO_IE_BASE, enable);
 }
 
-signed char gpio_output_data(unsigned char gpio, unsigned char data) __banked
+signed char gpio_output_data(unsigned char gpio, unsigned char data)
 {
 	return gpio_register_enable(gpio, GPIO_D_BASE, data);
 }
 
-signed char gpio_input_data(unsigned char gpio) __banked
+signed char gpio_input_data(unsigned char gpio)
 {
 	return gpio_register_check(gpio, GPIO_IN_BASE);
 }
 
-signed char gpio_pull_up(unsigned char gpio, unsigned char enable) __banked
+signed char gpio_pull_up(unsigned char gpio, unsigned char enable)
 {
 	return gpio_register_enable(gpio, GPIO_PU_BASE, enable);
 }
 
-signed char gpio_open_drain(unsigned char gpio, unsigned char enable) __banked
+signed char gpio_open_drain(unsigned char gpio, unsigned char enable)
 {
 	return gpio_register_enable(gpio, GPIO_OD_BASE, enable);
 }

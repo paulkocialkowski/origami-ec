@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_CORE
+#include <segment.h>
 #include <core.h>
 #include <serial.h>
 #include <console.h>

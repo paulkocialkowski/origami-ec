@@ -95,6 +95,10 @@ OUTPUT_DIRS = $(sort $(dir $(OUTPUT_BINARY) $(OUTPUT_IMAGE)))
 
 # Config
 
+ifneq ($(CONFIG_CODE_SEGMENT_CONSTANT),)
+CFLAGS += --constseg $(CONFIG_CODE_SEGMENT_CONSTANT)
+endif
+
 ifneq ($(CONFIG_XRAM_ADDRESS),)
 LDFLAGS += --xram-loc $(CONFIG_XRAM_ADDRESS) --xram-size $(CONFIG_XRAM_SIZE)
 endif
@@ -103,14 +107,8 @@ ifneq ($(CONFIG_CODE_SIZE),)
 LDFLAGS += --code-size $(CONFIG_CODE_SIZE)
 endif
 
-ifneq ($(CONFIG_CODE_SEGMENT_CSEGD),)
-LDFLAGS += -Wl "-b CSEGD = $(CONFIG_CODE_SEGMENT_CSEGD)"
-endif
+LDFLAGS += $(foreach segment,$(CONFIG_CODE_SEGMENTS),-Wl "-b $(segment) = $(CONFIG_CODE_SEGMENT_$(segment))")
 
-ifneq ($(CONFIG_CODE_SEGMENT_CSEGP),)
-LDFLAGS += -Wl "-b CSEGP = $(CONFIG_CODE_SEGMENT_CSEGP)"
-endif
- 
 # Macros
 
 segmentcheck = test ! -z $(2) || true && grep l_$(1) $(BUILD_BINARY).map | $(SED) "s/[^[:space:]]*[[:space:]]*\([0-9A-F]*\).*/(( 0x\1 <= $(3) ))/g" | sh || ( echo "Segment $(1) is out of bounds" && false )
@@ -147,9 +145,8 @@ $(BUILD_OBJECTS_ASM): $(BUILD)/%.rel: %.asm Makefile $(RULES) | $(BUILD_DIRS)
 $(BUILD_BINARY): device $(BUILD_OBJECTS_SOURCES) $(BUILD_OBJECTS_ASM)
 	@echo " LINK   $@"
 	@$(SDCC) $(LDFLAGS) -o $(BUILD_BINARY) $(BUILD_OBJECTS)
-	@$(call segmentcheck,CSEG,0,$(CONFIG_CODE_PRIMARY_SIZE))
-	@$(call segmentcheck,CSEGD,$(CONFIG_CODE_SEGMENT_CSEGD),$(CONFIG_CODE_SEGMENT_SIZE))
-	@$(call segmentcheck,CSEGP,$(CONFIG_CODE_SEGMENT_CSEGP),$(CONFIG_CODE_SEGMENT_SIZE))
+	@$(call segmentcheck,CSEG,$(CONFIG_CODE_PRIMARY),$(CONFIG_CODE_PRIMARY_SIZE))
+	@for segment in $(CONFIG_CODE_SEGMENTS) ; do $(call segmentcheck,$$segment,$(CONFIG_CODE_SEGMENT_$$segment),$(CONFIG_CODE_SEGMENT_SIZE)) ; done
 
 $(OUTPUT_DIRS):
 	@mkdir -p $@

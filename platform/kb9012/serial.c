@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_SERIAL
+#include <segment.h>
 #include <8051.h>
 #include <kb9012/serial.h>
 #include <kb9012/core.h>
 #include <kb9012/gpio.h>
 #include <serial.h>
 #include <config.h>
-
-#pragma codeseg CSEGP
 
 char serial_send_buffer[8];
 unsigned char serial_send_count;
@@ -43,7 +43,7 @@ static inline void serial_interrupt_disable(void)
 	IE &= ~IE_SERIAL_ENABLE;
 }
 
-signed char serial_send(char c) __banked
+signed char serial_send(char c)
 {
 	unsigned char index;
 
@@ -77,7 +77,7 @@ complete:
 	return 0;
 }
 
-char serial_recv(void) __banked
+char serial_recv(void)
 {
 	char c;
 
@@ -97,17 +97,17 @@ char serial_recv(void) __banked
 	return c;
 }
 
-unsigned char serial_send_available(void) __banked
+unsigned char serial_send_available(void)
 {
 	return (sizeof(serial_send_buffer) - serial_send_count);
 }
 
-unsigned char serial_recv_available(void) __banked
+unsigned char serial_recv_available(void)
 {
 	return serial_recv_count;
 }
 
-void serial_suspend(void) __banked
+void serial_suspend(void)
 {
 	while (serial_send_busy) ;
 
@@ -115,13 +115,13 @@ void serial_suspend(void) __banked
 	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK_IDLE) & 0xff;
 }
 
-void serial_resume(void) __banked
+void serial_resume(void)
 {
 	SCON2 = (SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) >> 8) & 0xff;
 	SCON3 = SCON_COUNTER(CONFIG_SERIAL_BAUDRATE, CONFIG_CLOCK) & 0xff;
 }
 
-signed char serial_init(void) __banked
+signed char serial_init(void)
 {
 	serial_send_count = 0;
 	serial_send_start = 0;

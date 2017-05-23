@@ -18,6 +18,8 @@
 #ifndef _CORE_H_
 #define _CORE_H_
 
+#include <segment.h>
+
 /*
  * Macros
  */
@@ -50,7 +52,7 @@ enum {
  * API functions
  */
 
-void suspend(unsigned char type);
-void reset(void);
+void suspend(unsigned char type) __segment_hint_core;
+void reset(void) __segment_hint_core;
 
 #endif

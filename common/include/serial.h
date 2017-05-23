@@ -19,6 +19,7 @@
 #define _SERIAL_H_
 
 #include <stdio.h>
+#include <segment.h>
 
 /*
  * Macros
@@ -30,22 +31,22 @@
  * API functions
  */
 
-signed char serial_send(char c) __banked;
-char serial_recv(void) __banked;
-unsigned char serial_send_available(void) __banked;
-unsigned char serial_recv_available(void) __banked;
-void serial_suspend(void) __banked;
-void serial_resume(void) __banked;
-signed char serial_init(void) __banked;
+signed char serial_send(char c) __segment_hint_serial;
+char serial_recv(void) __segment_hint_serial;
+unsigned char serial_send_available(void) __segment_hint_serial;
+unsigned char serial_recv_available(void) __segment_hint_serial;
+void serial_suspend(void) __segment_hint_serial;
+void serial_resume(void) __segment_hint_serial;
+signed char serial_init(void) __segment_hint_serial;
 
 /*
  * Functions
  */
 
-void putchar(char c);
-signed char serial_putc(char c);
-signed char serial_puts(const char *string);
-signed char serial_print(const char *string);
-signed char serial_printnl(const char *string);
+void putchar(char c) __segment_hint_serial;
+signed char serial_putc(char c) __segment_hint_serial;
+signed char serial_puts(const char *string) __segment_hint_serial;
+signed char serial_print(const char *string) __segment_hint_serial;
+signed char serial_printnl(const char *string) __segment_hint_serial;
 
 #endif

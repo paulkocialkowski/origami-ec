@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_CONSOLE
+#include <segment.h>
 #include <ctype.h>
 #include <string.h>
 #include <serial.h>

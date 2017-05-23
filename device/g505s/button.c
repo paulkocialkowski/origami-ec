@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_BUTTON
+#include <segment.h>
 #include <kb9012/gpio.h>
 #include <kb9012/gpwu.h>
 #include <g505s/button.h>
 #include <button.h>
 
-#pragma codeseg CSEGD
-
-char button_pressed(unsigned char button) __banked
+char button_pressed(unsigned char button)
 {
 	switch (button) {
 		case BUTTON_POWER:
@@ -34,7 +34,7 @@ char button_pressed(unsigned char button) __banked
 	}
 }
 
-signed char button_init(void) __banked
+signed char button_init(void)
 {
 	signed char rc = 0;
 

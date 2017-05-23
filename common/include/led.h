@@ -18,6 +18,8 @@
 #ifndef _LED_H_
 #define _LED_H_
 
+#include <segment.h>
+
 /*
  * Values
  */
@@ -35,15 +37,15 @@ enum {
  * API functions
  */
 
-signed char led_enable(unsigned char led, unsigned char enable) __banked;
-signed char led_init(void) __banked;
+signed char led_enable(unsigned char led, unsigned char enable) __segment_hint_led;
+signed char led_init(void) __segment_hint_led;
 
 /*
  * Functions
  */
 
 #ifdef CONFIG_CONSOLE
-signed char led_command(unsigned char argc, char **argv);
+signed char led_command(unsigned char argc, char **argv) __segment_hint_led;
 #endif
 
 #endif

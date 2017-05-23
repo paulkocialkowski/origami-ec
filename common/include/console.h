@@ -18,6 +18,8 @@
 #ifndef _CONSOLE_H_
 #define _CONSOLE_H_
 
+#include <segment.h>
+
 /*
  * Values
  */
@@ -53,11 +55,11 @@ enum {
  * Functions
  */
 
-signed char console_task(void);
-signed char console_init(void);
+signed char console_task(void) __segment_hint_console;
+signed char console_init(void) __segment_hint_console;
 
 #ifdef CONFIG_CONSOLE_HELP
-signed char help_command(unsigned char argc, char **argv);
+signed char help_command(unsigned char argc, char **argv) __segment_hint_console;
 #endif
 
 #endif

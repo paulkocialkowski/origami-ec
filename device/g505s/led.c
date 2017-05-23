@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_LED
+#include <segment.h>
 #include <kb9012/gpio.h>
 #include <g505s/led.h>
 #include <led.h>
 
-#pragma codeseg CSEGD
-
-signed char led_enable(unsigned char led, unsigned char enable) __banked
+signed char led_enable(unsigned char led, unsigned char enable)
 {
 	/* LED GPIO outputs are active low. */
 	unsigned char data = !enable;
@@ -42,7 +42,7 @@ signed char led_enable(unsigned char led, unsigned char enable) __banked
 	}
 }
 
-signed char led_init(void) __banked
+signed char led_init(void)
 {
 	signed char rc = 0;
 

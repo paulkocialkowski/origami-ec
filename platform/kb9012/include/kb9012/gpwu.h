@@ -18,6 +18,8 @@
 #ifndef _KB9012_GPWU_H_
 #define _KB9012_GPWU_H_
 
+#include <segment.h>
+
 /*
  * Registers
  */
@@ -49,13 +51,13 @@
  * Functions
  */
 
-signed char gpwu_event_enable(unsigned char gpio, unsigned char enable) __banked;
-signed char gpwu_event_pending(unsigned char gpio) __banked;
-signed char gpwu_event_clear(unsigned char gpio) __banked;
-signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high) __banked;
-signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level) __banked;
-signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable) __banked;
-void gpwu_suspend(void) __banked;
-void gpwu_resume(void) __banked;
+signed char gpwu_event_enable(unsigned char gpio, unsigned char enable) __segment_hint_platform;
+signed char gpwu_event_pending(unsigned char gpio) __segment_hint_platform;
+signed char gpwu_event_clear(unsigned char gpio) __segment_hint_platform;
+signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high) __segment_hint_platform;
+signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level) __segment_hint_platform;
+signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable) __segment_hint_platform;
+void gpwu_suspend(void) __segment_hint_platform;
+void gpwu_resume(void) __segment_hint_platform;
 
 #endif

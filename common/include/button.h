@@ -18,6 +18,8 @@
 #ifndef _BUTTON_H_
 #define _BUTTON_H_
 
+#include <segment.h>
+
 /*
  * Values
  */
@@ -38,17 +40,17 @@ extern unsigned char button_event;
  * API functions
  */
 
-char button_pressed(unsigned char button) __banked;
-signed char button_init(void) __banked;
+char button_pressed(unsigned char button) __segment_hint_button;
+signed char button_init(void) __segment_hint_button;
 
 /*
  * Functions
  */
 
-signed char button_task(void);
+signed char button_task(void) __segment_hint_button;
 
 #ifdef CONFIG_CONSOLE
-signed char button_command(unsigned char argc, char **argv);
+signed char button_command(unsigned char argc, char **argv) __segment_hint_button;
 #endif
 
 #endif

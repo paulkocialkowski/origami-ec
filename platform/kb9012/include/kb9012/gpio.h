@@ -18,6 +18,8 @@
 #ifndef _KB9012_GPIO_H_
 #define _KB9012_GPIO_H_
 
+#include <segment.h>
+
 /*
  * Registers
  */
@@ -58,12 +60,12 @@
  * Functions
  */
 
-signed char gpio_function_selection(unsigned char gpio, unsigned char alternative) __banked;
-signed char gpio_output_enable(unsigned char gpio, unsigned char enable) __banked;
-signed char gpio_input_enable(unsigned char gpio, unsigned char enable) __banked;
-signed char gpio_output_data(unsigned char gpio, unsigned char data) __banked;
-signed char gpio_input_data(unsigned char gpio) __banked;
-signed char gpio_pull_up(unsigned char gpio, unsigned char enable) __banked;
-signed char gpio_open_drain(unsigned char gpio, unsigned char enable) __banked;
+signed char gpio_function_selection(unsigned char gpio, unsigned char alternative) __segment_hint_platform;
+signed char gpio_output_enable(unsigned char gpio, unsigned char enable) __segment_hint_platform;
+signed char gpio_input_enable(unsigned char gpio, unsigned char enable) __segment_hint_platform;
+signed char gpio_output_data(unsigned char gpio, unsigned char data) __segment_hint_platform;
+signed char gpio_input_data(unsigned char gpio) __segment_hint_platform;
+signed char gpio_pull_up(unsigned char gpio, unsigned char enable) __segment_hint_platform;
+signed char gpio_open_drain(unsigned char gpio, unsigned char enable) __segment_hint_platform;
 
 #endif

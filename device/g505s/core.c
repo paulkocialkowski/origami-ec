@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_CORE
+#include <segment.h>
 #include <8051.h>
 #include <kb9012/core.h>
 #include <kb9012/gpio.h>

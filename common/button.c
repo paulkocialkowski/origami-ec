@@ -15,6 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_BUTTON
+#include <segment.h>
 #include <string.h>
 #include <serial.h>
 #include <button.h>

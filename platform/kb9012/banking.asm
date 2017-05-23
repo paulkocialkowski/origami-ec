@@ -24,20 +24,38 @@ __sdcc_banked_call::
 	pop dph			; restore dph value from stack
 	pop dpl			; restore dpl value from stack
 	push acc		; store acc (register value) to stack
-	mov a, r0		; move r0 (call lsb) to acc
-	push acc		; store acc to stack
-	mov a, r1		; move r1 (call msb) value to acc
-	push acc		; store acc to stack
 
-;	SDCC currently only allows segments to reside 64 kiB above their mapped
-;	code offset, with no way of controlling that offset.
-;	Thus, a fixed 64 kiB offset is applied regardless of the requested bank.
-	mov a, #0x07		; offset by 112 KiB (64 kiB + 48 kiB)
+;	In order to allow calling functions from the same switched segment
+;	without going through this trampoline, a call to __sdcc_banked_ret
+;	is added when returning from the switched segment, instead of declaring
+;	functions as banked in the code.
+	mov a, #__sdcc_banked_ret
+	push acc
+	mov a, #(__sdcc_banked_ret >> 8)
+	push acc
 
-;	Proper code to allow bank switching with a bank-based offset follows:
-;	mov a, r2		; move r2 (bank) value to acc
-;	add a, #0x06		; offset by 16 KiB blocks - 1
+;	The banked function address is calculated and pushed to stack for call.
+	mov a, r0		; move r0 (physical address lsb) to acc
+	push acc		; store acc (call lsb) to stack
+	mov a, r1		; move r1 (physical address part) value to acc
+	orl a, #0xc0		; adapt address for SEG3 remapping
+	push acc		; store acc (call msb) to stack
 
+;	The 16 kiB blocks offset is calculated by dividing the call physical
+;	address (as given through r2-r0) by 16 kiB. An optimized implementation
+;	follows:
+	mov a, r1		; move r1 (physical address part) to acc
+	rl a			; left-rotate acc
+	rl a			; left-rotate acc
+	anl a, #0x03		; mask out irrelevant bits
+	mov r1, a		; move acc (offset contribution) to r1
+	mov a, r2		; move r2 (physical address msb) to acc
+	rl a			; left-rotate acc
+	rl a			; left-rotate acc
+	anl a, #0xfc		; mask out irrelevant bits
+
+;	Both contributions (from r1 and r2) constitute the offset:
+	add a, r1		; add offset contributions
 	orl a, #0x80		; enable SEG3 remapping
 	push dpl		; store dpl value to stack
 	push dph		; store dph value to stack

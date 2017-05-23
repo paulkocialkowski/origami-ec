@@ -15,13 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_PLATFORM
+#include <segment.h>
 #include <8051.h>
 #include <kb9012/core.h>
 #include <kb9012/gpwu.h>
 #include <kb9012/gpio.h>
 #include <core.h>
-
-#pragma codeseg CSEGP
 
 static unsigned char gpwu_save[32];
 
@@ -119,7 +119,7 @@ static signed char gpwu_interrupt_enable(unsigned char gpio, unsigned char enabl
 	return 0;
 }
 
-signed char gpwu_event_enable(unsigned char gpio, unsigned char enable) __banked
+signed char gpwu_event_enable(unsigned char gpio, unsigned char enable)
 {
 	signed char rc = 0;
 
@@ -130,32 +130,32 @@ signed char gpwu_event_enable(unsigned char gpio, unsigned char enable) __banked
 	return rc;
 }
 
-signed char gpwu_event_pending(unsigned char gpio) __banked
+signed char gpwu_event_pending(unsigned char gpio)
 {
 	return gpwu_register_check(gpio, GPWU_PF_BASE);
 }
 
-signed char gpwu_event_clear(unsigned char gpio) __banked
+signed char gpwu_event_clear(unsigned char gpio)
 {
 	return gpwu_register_enable(gpio, GPWU_PF_BASE, 1);
 }
 
-signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high) __banked
+signed char gpwu_polarity_selection(unsigned char gpio, unsigned char high)
 {
 	return gpwu_register_enable(gpio, GPWU_PS_BASE, high);
 }
 
-signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level) __banked
+signed char gpwu_trigger_selection(unsigned char gpio, unsigned char level)
 {
 	return gpwu_register_enable(gpio, GPWU_EL_BASE, level);
 }
 
-signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable) __banked
+signed char gpwu_trigger_toggle(unsigned char gpio, unsigned char enable)
 {
 	return gpwu_register_enable(gpio, GPWU_CH_BASE, enable);
 }
 
-void gpwu_suspend(void) __banked
+void gpwu_suspend(void)
 {
 	unsigned short address;
 	unsigned char i;
@@ -166,7 +166,7 @@ void gpwu_suspend(void) __banked
 		gpwu_save[i] = register_read(address++);
 }
 
-void gpwu_resume(void) __banked
+void gpwu_resume(void)
 {
 	unsigned short address;
 	unsigned char i;

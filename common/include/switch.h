@@ -18,6 +18,8 @@
 #ifndef _SWITCH_H_
 #define _SWITCH_H_
 
+#include <segment.h>
+
 /*
  * Values
  */
@@ -38,18 +40,18 @@ extern unsigned char switch_event;
  * API functions
  */
 
-signed char switch_enable(unsigned char switch_output, unsigned char enable) __banked;
-unsigned char switch_status(unsigned char switch_input) __banked;
-signed char switch_init(void) __banked;
+signed char switch_enable(unsigned char switch_output, unsigned char enable) __segment_hint_switch;
+unsigned char switch_status(unsigned char switch_input) __segment_hint_switch;
+signed char switch_init(void) __segment_hint_switch;
 
 /*
  * Functions
  */
 
-signed char switch_task(void);
+signed char switch_task(void) __segment_hint_switch;
 
 #ifdef CONFIG_CONSOLE
-signed char switch_command(unsigned char argc, char **argv);
+signed char switch_command(unsigned char argc, char **argv) __segment_hint_switch;
 #endif
 
 #endif

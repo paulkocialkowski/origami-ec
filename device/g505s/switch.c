@@ -15,14 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define SEGMENT_HINT_SWITCH
+#include <segment.h>
 #include <kb9012/gpio.h>
 #include <kb9012/gpwu.h>
 #include <g505s/switch.h>
 #include <switch.h>
 
-#pragma codeseg CSEGD
-
-signed char switch_enable(unsigned char switch_output, unsigned char enable) __banked
+signed char switch_enable(unsigned char switch_output, unsigned char enable)
 {
 	switch_output;
 	enable;
@@ -30,7 +30,7 @@ signed char switch_enable(unsigned char switch_output, unsigned char enable) __b
 	return -1;
 }
 
-unsigned char switch_status(unsigned char switch_input) __banked
+unsigned char switch_status(unsigned char switch_input)
 {
 	switch (switch_input) {
 		case SWITCH_INPUT_AC:
@@ -42,7 +42,7 @@ unsigned char switch_status(unsigned char switch_input) __banked
 	}
 }
 
-signed char switch_init(void) __banked
+signed char switch_init(void)
 {
 	signed char rc = 0;
 
