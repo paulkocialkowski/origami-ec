@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-sources-common = button.c led.c origami-ec.c serial.c switch.c debug.c
+sources-common = common.c button.c led.c origami-ec.c serial.c switch.c debug.c
 
 ifeq ($(CONFIG_CONSOLE), yes)
 sources-common += console.c

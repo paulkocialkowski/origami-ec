@@ -19,14 +19,6 @@
 #include <segment.h>
 #include <serial.h>
 
-void putchar(char c)
-{
-	if (c == '\n')
-		serial_send('\r');
-
-	serial_send(c);
-}
-
 signed char serial_putc(char c)
 {
 	return serial_send(c);

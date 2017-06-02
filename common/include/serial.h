@@ -43,7 +43,6 @@ signed char serial_init(void) __segment_hint_serial;
  * Functions
  */
 
-void putchar(char c) __segment_hint_serial;
 signed char serial_putc(char c) __segment_hint_serial;
 signed char serial_puts(const char *string) __segment_hint_serial;
 signed char serial_print(const char *string) __segment_hint_serial;
