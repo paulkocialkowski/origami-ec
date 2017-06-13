@@ -18,6 +18,10 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
+#if (__SDCC_VERSION_MAJOR * 100 + __SDCC_VERSION_MINOR * 10 + __SDCC_VERSION_PATCH) >= 362
+int putchar(int c);
+#else
 void putchar(char c);
+#endif
 
 #endif

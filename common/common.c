@@ -18,10 +18,18 @@
 #include <common.h>
 #include <serial.h>
 
+#if (__SDCC_VERSION_MAJOR * 100 + __SDCC_VERSION_MINOR * 10 + __SDCC_VERSION_PATCH) >= 362
+int putchar(int c)
+#else
 void putchar(char c)
+#endif
 {
 	if (c == '\n')
 		serial_send('\r');
 
 	serial_send(c);
+
+#if (__SDCC_VERSION_MAJOR * 100 + __SDCC_VERSION_MINOR * 10 + __SDCC_VERSION_PATCH) >= 362
+	return c;
+#endif
 }
