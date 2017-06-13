@@ -134,7 +134,7 @@ $(BUILD_VERSION_HEADER): | $(BUILD_DIRS)
 
 $(BUILD_OBJECTS_SOURCES): $(BUILD)/%.rel: %.c $(BUILD_VERSION_HEADER) Makefile $(RULES) $(DEVICE_CONFIG) $(PLATFORM_CONFIG) | $(BUILD_DIRS)
 	@echo " CC     $<"
-	@$(SDCC) $(CFLAGS) -MMD -c $< -o $(BUILD)/$*.d
+	@$(SDCC) $(CFLAGS) -MM -c $< -o $(BUILD)/$*.d
 	@$(SED)  "s,$(notdir $*).rel,$(BUILD)/$*.rel,g" -i $(BUILD)/$*.d
 	@$(SDCC) $(CFLAGS) -c $< -o $(dir $@)
 
