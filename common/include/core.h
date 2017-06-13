@@ -53,6 +53,5 @@ enum {
  */
 
 void suspend(unsigned char type) __segment_hint_core;
-void reset(void) __segment_hint_core;
 
 #endif

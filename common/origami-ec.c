@@ -56,16 +56,6 @@ signed char version_command(unsigned char argc, char **argv)
 
 	return 0;
 }
-
-signed char reset_command(unsigned char argc, char **argv)
-{
-	argc;
-	argv;
-
-	reset();
-
-	return 0;
-}
 #endif
 
 void init(void)
