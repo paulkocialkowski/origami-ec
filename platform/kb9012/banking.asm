@@ -34,28 +34,15 @@ __sdcc_banked_call::
 	mov a, #(__sdcc_banked_ret >> 8)
 	push acc
 
-;	The banked function address is calculated and pushed to stack for call.
+;	The banked function address is pushed to stack for call.
 	mov a, r0		; move r0 (physical address lsb) to acc
 	push acc		; store acc (call lsb) to stack
 	mov a, r1		; move r1 (physical address part) value to acc
-	orl a, #0xc0		; adapt address for SEG3 remapping
 	push acc		; store acc (call msb) to stack
 
-;	The 16 kiB blocks offset is calculated by dividing the call physical
-;	address (as given through r2-r0) by 16 kiB. An optimized implementation
-;	follows:
-	mov a, r1		; move r1 (physical address part) to acc
-	rl a			; left-rotate acc
-	rl a			; left-rotate acc
-	anl a, #0x03		; mask out irrelevant bits
-	mov r1, a		; move acc (offset contribution) to r1
-	mov a, r2		; move r2 (physical address msb) to acc
-	rl a			; left-rotate acc
-	rl a			; left-rotate acc
-	anl a, #0xfc		; mask out irrelevant bits
-
-;	Both contributions (from r1 and r2) constitute the offset:
-	add a, r1		; add offset contributions
+;	The offset is the number of 16 kiB blocks to map the segment.
+	mov a, r2		; move r2 (bank) value to acc
+	add a, #0x03		; offset by 48 kiB (3 blocks of 16 kiB)
 	orl a, #0x80		; enable SEG3 remapping
 	push dpl		; store dpl value to stack
 	push dph		; store dph value to stack

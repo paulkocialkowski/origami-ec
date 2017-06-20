@@ -1,0 +1,95 @@
+#!/bin/sh
+
+check() {
+	local map=$1
+	shift
+
+	local size_limit
+	local size
+
+	while ! [ -z "$1" ]
+	do
+		segment=$1
+		shift
+		size_limit=$1
+		shift
+
+		size="0x"$( grep " l_$segment " "$map" | sed "s/[^[:space:]]*[[:space:]]*\([0-9A-F]*\).*/\1/g" )
+
+		if (( $size > $size_limit ))
+		then
+			printf "Segment $segment is out of bounds\n"
+			return 1
+		fi
+	done
+}
+
+map() {
+	local binary=$1
+	shift
+
+	local path=$( dirname "$binary")
+	local segments_directory_path="$path/segments"
+	local segments_path="$segments_directory_path/segments.txt"
+	local regex="\(.*\) \(.*\)"
+	local segment
+	local base
+	local map
+	local size
+	local offset
+
+	mkdir -p "$segments_directory_path"
+	truncate -s 0 "$segments_path"
+
+	while ! [ -z "$1" ]
+	do
+		segment=$1
+		shift
+		base=$1
+		shift
+		map=$1
+		shift
+		size=$1
+		shift
+
+		echo "$map $segment" >> "$segments_path"
+		dd if="$binary" of="$segments_directory_path/$segment.bin" bs=1 skip=$(( $base )) count=$(( $size )) status=none
+	done
+
+	truncate -s 0 "$binary"
+	offset=0
+
+	sort -g "$segments_path" | while read line
+	do
+		map=$( echo "$line" | sed "s/$regex/\1/g" )
+		segment=$( echo "$line" | sed "s/$regex/\2/g" )
+
+		size=$( stat -c "%s" "$segments_directory_path/$segment.bin"  )
+
+		if (( $offset < $map ))
+		then
+			dd if="/dev/zero" of="$binary" seek=$(( $offset )) count=$(( $map - $offset ))
+		fi
+
+		cat "$segments_directory_path/$segment.bin" >> "$binary"
+		offset=$(( $offset + $size ))
+	done
+}
+
+segments() {
+	local action=$1
+	shift
+
+	set -e
+
+	case $action in
+		"check")
+			check "$@"
+			;;
+		"map")
+			map "$@"
+			;;
+	esac
+}
+
+segments "$@"
