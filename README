@@ -1,14 +1,11 @@
-Origami-EC
-==========
+# Origami-EC
 
-About
------
+## About
 
 The Origami Embedded Controller firmware (Origami-EC) is a flexible free
 software embedded controller firmware implementation for 8051-based platforms.
 
-Assumptions
------------
+## Assumptions
 
 Origami-EC aims at being flexible and supporting various different embedded
 controllers platforms and devices, by clearly separating the common,
@@ -17,14 +14,12 @@ platform-specific and device-specific code.
 However, it is assumed that target platforms are 8051-based. In particular, the
 code is optimized for 8-bit processors.
 
-Supported platforms
--------------------
+## Supported platforms
 
 Origami-EC was initially written with support for the KB9012 embedded
 controller, designed and produced by ENE.
 
-Supported devices
------------------
+## Supported devices
 
 Origami-EC was initially written with support for the G505s laptop, designed
 by Compal and produced by Lenovo.
