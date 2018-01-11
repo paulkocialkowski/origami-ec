@@ -38,10 +38,10 @@ void serial_interrupt(void) __interrupt(4)
 	}
 
 	if (RI) {
-		RI = 0;
-
-		if (serial_recv_count == sizeof(serial_recv_buffer))
+		if (serial_recv_count == sizeof(serial_recv_buffer)) {
+			RI = 0;
 			return;
+		}
 
 		index = (serial_recv_start + serial_recv_count);
 		if (index >= sizeof(serial_recv_buffer))
@@ -49,5 +49,7 @@ void serial_interrupt(void) __interrupt(4)
 
 		serial_recv_buffer[index] = SBUF;
 		serial_recv_count++;
+
+		RI = 0;
 	}
 }
