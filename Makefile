@@ -114,10 +114,6 @@ endif
 
 LDFLAGS += $(foreach segment,$(CONFIG_CODE_SEGMENTS),-Wl "-b $(segment) = $(CONFIG_CODE_SEGMENT_$(segment)_BASE)")
 
-# Macros
-
-segmentcheck = test ! -z $(2) || true && grep l_$(1) $(BUILD_BINARY).map | $(SED) "s/[^[:space:]]*[[:space:]]*\([0-9A-F]*\).*/(( 0x\1 <= $(3) ))/g" | sh || ( echo "Segment $(1) is out of bounds" && false )
-
 # Rules
 
 all : $(OUTPUT_IMAGE)
