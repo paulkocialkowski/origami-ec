@@ -5,6 +5,11 @@
 The Origami Embedded Controller firmware (Origami-EC) is a flexible free
 software embedded controller firmware implementation for 8051-based platforms.
 
+Origami-EC is an affiliated project of the Embedded Freedom initiative.
+
+The website for the project is located at:
+<https://projects.embedded-freedom.org/origami-ec/>
+
 ## Assumptions
 
 Origami-EC aims at being flexible and supporting various different embedded
@@ -23,3 +28,24 @@ controller, designed and produced by ENE.
 
 Origami-EC was initially written with support for the G505s laptop, designed
 by Compal and produced by Lenovo.
+
+## Contributions
+
+### Coding Style
+
+The coding style of the code base is expected to be kept consistent across
+the project. Changes made to the coding style have to be motivated and applied
+to the whole code base.
+
+### Change Proposal
+
+Changes to the Origami-EC code base can be submitted and integrated to its
+source tree after a code review process.
+
+These changes should be submitted as email-formatted git patches to
+origami-ec@lists.embedded-freedom.org with the maintainers concerned by the
+change added in copy. The code review then takes places publicly on the mailing
+list.
+
+A Signed-Off-By line is required for each proposed change, as a way to approve
+the Developer Certificate of Origin <https://developercertificate.org/>.
