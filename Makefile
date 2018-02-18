@@ -130,7 +130,9 @@ $(BUILD_VERSION_HEADER): | $(BUILD_DIRS)
 	@touch $@
 	@echo "#ifndef _VERSION_H_" >> $@
 	@echo "#define _VERSION_H_" >> $@
+	@echo "" >> $@
 	@echo "#define VERSION \"$(VERSION)\"" >> $@
+	@echo "" >> $@
 	@echo "#endif" >> $@
 
 $(BUILD_OBJECTS_SOURCES): $(BUILD)/%.rel: %.c $(BUILD_VERSION_HEADER) Makefile $(RULES) $(DEVICE_CONFIG) $(PLATFORM_CONFIG) | $(BUILD_DIRS)
