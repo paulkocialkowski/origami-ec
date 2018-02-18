@@ -17,6 +17,7 @@
 
 #define SEGMENT_HINT_CORE
 #include <segment.h>
+#include <string.h>
 #include <8051.h>
 #include <kb9012/core.h>
 #include <kb9012/gpwu.h>
@@ -25,6 +26,7 @@
 #include <core.h>
 #include <config.h>
 #include <serial.h>
+#include <version.h>
 
 void suspend(unsigned char type)
 {
@@ -59,6 +61,18 @@ void suspend(unsigned char type)
 	gpwu_resume();
 }
 
+void firmware_version(void)
+{
+	unsigned char version;
+
+	if (strcmp(VERSION, "pre-square") == 0)
+		version = 0x01;
+	else
+		version = 0xff;
+
+	register_write(EC_FV, version);
+}
+
 unsigned char _sdcc_external_startup(void)
 {
 	unsigned char value;
@@ -79,6 +93,8 @@ unsigned char _sdcc_external_startup(void)
 
 	/* Interrupts enable. */
 	IE |= IE_ALL_ENABLE;
+
+	firmware_version();
 
 	return 0;
 }

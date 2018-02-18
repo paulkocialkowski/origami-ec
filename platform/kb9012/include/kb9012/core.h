@@ -32,6 +32,7 @@
 __sfr __at(0x86) PCON2;
 __sfr __at(0xb0) P3IE;
 
+#define EC_FV							0xff01
 #define EC_PMUCFG						0xff0c
 #define EC_CLKCFG						0xff0d
 
