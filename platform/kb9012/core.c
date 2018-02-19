@@ -37,26 +37,26 @@ void suspend(unsigned char type)
 	serial_suspend();
 
 	/* Clock configuration to idle. */
-	value = register_read(EC_CLKCFG);
-	value = value_mask_clear(value, EC_CLKCFG_CLOCK_MASK, EC_CLKCFG_CLOCK_SHIFT);
-	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK_IDLE);
-	register_write(EC_CLKCFG, value);
+	value = register_read(CLKCFG);
+	value = value_mask_clear(value, CLKCFG_CLOCK_MASK, CLKCFG_CLOCK_SHIFT);
+	value |= CLKCFG_CLOCK(CONFIG_CLOCK_IDLE);
+	register_write(CLKCFG, value);
 
 	if (type == SUSPEND_TYPE_STOP) {
-		value = register_read(EC_PMUCFG);
-		value |= EC_PMUCFG_STOP;
-		register_write(EC_PMUCFG, value);
+		value = register_read(PMUCFG);
+		value |= PMUCFG_STOP;
+		register_write(PMUCFG, value);
 	} else {
-		value = register_read(EC_PMUCFG);
-		value |= EC_PMUCFG_IDLE;
-		register_write(EC_PMUCFG, value);
+		value = register_read(PMUCFG);
+		value |= PMUCFG_IDLE;
+		register_write(PMUCFG, value);
 	}
 
 	/* Clock configuration to normal. */
-	value = register_read(EC_CLKCFG);
-	value = value_mask_clear(value, EC_CLKCFG_CLOCK_MASK, EC_CLKCFG_CLOCK_SHIFT);
-	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK);
-	register_write(EC_CLKCFG, value);
+	value = register_read(CLKCFG);
+	value = value_mask_clear(value, CLKCFG_CLOCK_MASK, CLKCFG_CLOCK_SHIFT);
+	value |= CLKCFG_CLOCK(CONFIG_CLOCK);
+	register_write(CLKCFG, value);
 
 	serial_resume();
 	gpwu_resume();
@@ -71,7 +71,7 @@ void firmware_version_init(void)
 	else
 		version = 0xff;
 
-	register_write(EC_FV, version);
+	register_write(ECFV, version);
 }
 
 unsigned char _sdcc_external_startup(void)
@@ -82,18 +82,18 @@ unsigned char _sdcc_external_startup(void)
 	PCON2 |= PCON2_EXTERNAL_MODULES_ENABLE;
 
 	/* Clock configuration. */
-	value = register_read(EC_CLKCFG);
-	value = value_mask_clear(value, EC_CLKCFG_CLOCK_MASK, EC_CLKCFG_CLOCK_SHIFT);
-	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK) | EC_CLKCFG_FLASH_CLOCK_FULL;
-	register_write(EC_CLKCFG, value);
+	value = register_read(CLKCFG);
+	value = value_mask_clear(value, CLKCFG_CLOCK_MASK, CLKCFG_CLOCK_SHIFT);
+	value |= CLKCFG_CLOCK(CONFIG_CLOCK) | CLKCFG_FLASH_CLOCK_FULL;
+	register_write(CLKCFG, value);
 
 	value = CLK32CR_SOURCE_INTERNAL | CLK32CR_INTERNAL_ENABLE;
 	register_write(CLK32CR, value);
 
 	/* Idle suspend wakeup. */
-	value = register_read(EC_PMUCFG);
-	value = EC_PMUCFG_STOP_WAKEUP_GPWU | EC_PMUCFG_IDLE_WAKEUP_INTERRUPT;
-	register_write(EC_PMUCFG, value);
+	value = register_read(PMUCFG);
+	value = PMUCFG_STOP_WAKEUP_GPWU | PMUCFG_IDLE_WAKEUP_INTERRUPT;
+	register_write(PMUCFG, value);
 
 	/* Interrupts enable. */
 	IE |= IE_ALL_ENABLE;

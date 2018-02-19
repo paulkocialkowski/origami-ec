@@ -42,5 +42,17 @@ void watchdog_init(void)
 
 	register_write(WDTCFG, value);
 
+	value = register_read(ECHA);
+	value &= ~ECHA_WRITE_PROTECT;
+	register_write(ECHA, value);
+
+	value = register_read(PXCFG);
+	value |= PXCFG_WDT_RESET_GPIO;
+	register_write(PXCFG, value);
+
+	value = register_read(ECHA);
+	value |= ECHA_WRITE_PROTECT;
+	register_write(ECHA, value);
+
 	P0IE |= P0IE_WATCHDOG;
 }

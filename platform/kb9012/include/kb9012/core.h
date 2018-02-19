@@ -22,8 +22,8 @@
  * Macros
  */
 
-#define EC_CLKCFG_CLOCK(clock) \
-	(((clock / EC_CLKCFG_CLOCK_BASE) - 1) << EC_CLKCFG_CLOCK_SHIFT)
+#define CLKCFG_CLOCK(clock) \
+	(((clock / CLKCFG_CLOCK_BASE) - 1) << CLKCFG_CLOCK_SHIFT)
 
 /*
  * Registers
@@ -35,9 +35,11 @@ __sfr __at(0xb0) P3IE;
 
 #define CLK32CR							0xfe8a
 
-#define EC_FV							0xff01
-#define EC_PMUCFG						0xff0c
-#define EC_CLKCFG						0xff0d
+#define ECFV							0xff01
+#define ECHA							0xff02
+#define PMUCFG							0xff0c
+#define CLKCFG							0xff0d
+#define PXCFG							0xff14
 
 /*
  * Values
@@ -56,14 +58,18 @@ __sfr __at(0xb0) P3IE;
 #define CLK32CR_SOURCE_INTERNAL					(1 << 2)
 #define CLK32CR_INTERNAL_ENABLE					(1 << 1)
 
-#define EC_PMUCFG_STOP						(1 << 7)
-#define EC_PMUCFG_IDLE						(1 << 6)
-#define EC_PMUCFG_STOP_WAKEUP_GPWU				(1 << 1)
-#define EC_PMUCFG_IDLE_WAKEUP_INTERRUPT				(1 << 0)
+#define ECHA_WRITE_PROTECT					(1 << 5)
 
-#define EC_CLKCFG_FLASH_CLOCK_FULL				(1 << 6)
-#define EC_CLKCFG_CLOCK_SHIFT					2
-#define EC_CLKCFG_CLOCK_MASK					0x03
-#define EC_CLKCFG_CLOCK_BASE					8000000
+#define PMUCFG_STOP						(1 << 7)
+#define PMUCFG_IDLE						(1 << 6)
+#define PMUCFG_STOP_WAKEUP_GPWU					(1 << 1)
+#define PMUCFG_IDLE_WAKEUP_INTERRUPT				(1 << 0)
+
+#define CLKCFG_FLASH_CLOCK_FULL					(1 << 6)
+#define CLKCFG_CLOCK_SHIFT					2
+#define CLKCFG_CLOCK_MASK					0x03
+#define CLKCFG_CLOCK_BASE					8000000
+
+#define PXCFG_WDT_RESET_GPIO					(1 << 4)
 
 #endif
