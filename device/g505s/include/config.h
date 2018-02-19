@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Paul Kocialkowski <contact@paulk.fr>
+ * Copyright (C) 2015-2018 Paul Kocialkowski <contact@paulk.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,12 @@
 
 #define CONFIG_CLOCK						32000000
 #define CONFIG_CLOCK_IDLE					8000000
+
+/*
+ * Watchdog
+ */
+
+#define CONFIG_WATCHDOG_PERIOD					1024
 
 /*
  * Serial

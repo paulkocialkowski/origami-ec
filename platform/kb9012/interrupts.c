@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Paul Kocialkowski <contact@paulk.fr>
+ * Copyright (C) 2015-2018 Paul Kocialkowski <contact@paulk.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,9 @@
  */
 
 #include <8051.h>
+#include <kb9012/watchdog.h>
 #include <kb9012/serial.h>
+#include <core.h>
 
 void serial_interrupt(void) __interrupt(4)
 {
@@ -52,4 +54,13 @@ void serial_interrupt(void) __interrupt(4)
 
 		RI = 0;
 	}
+}
+
+void watchdog_interrupt(void) __interrupt(8)
+{
+	unsigned char value;
+
+	value = register_read(WDTPF);
+	if (value & WDTPF_INTERRUPT_FLAG || value & WDTPF_RESET_FLAG)
+		register_write(WDTPF, WDTPF_INTERRUPT_FLAG | WDTPF_RESET_FLAG);
 }

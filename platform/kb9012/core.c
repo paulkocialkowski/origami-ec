@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Paul Kocialkowski <contact@paulk.fr>
+ * Copyright (C) 2015-2018 Paul Kocialkowski <contact@paulk.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include <string.h>
 #include <8051.h>
 #include <kb9012/core.h>
+#include <kb9012/watchdog.h>
 #include <kb9012/gpwu.h>
 #include <kb9012/serial.h>
 #include <g505s/button.h>
@@ -61,7 +62,7 @@ void suspend(unsigned char type)
 	gpwu_resume();
 }
 
-void firmware_version(void)
+void firmware_version_init(void)
 {
 	unsigned char version;
 
@@ -86,6 +87,9 @@ unsigned char _sdcc_external_startup(void)
 	value |= EC_CLKCFG_CLOCK(CONFIG_CLOCK) | EC_CLKCFG_FLASH_CLOCK_FULL;
 	register_write(EC_CLKCFG, value);
 
+	value = CLK32CR_SOURCE_INTERNAL | CLK32CR_INTERNAL_ENABLE;
+	register_write(CLK32CR, value);
+
 	/* Idle suspend wakeup. */
 	value = register_read(EC_PMUCFG);
 	value = EC_PMUCFG_STOP_WAKEUP_GPWU | EC_PMUCFG_IDLE_WAKEUP_INTERRUPT;
@@ -94,7 +98,8 @@ unsigned char _sdcc_external_startup(void)
 	/* Interrupts enable. */
 	IE |= IE_ALL_ENABLE;
 
-	firmware_version();
+	firmware_version_init();
+	watchdog_init();
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Paul Kocialkowski <contact@paulk.fr>
+ * Copyright (C) 2016-2018 Paul Kocialkowski <contact@paulk.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,5 +23,6 @@
  */
 
 void serial_interrupt(void) __interrupt(4);
+void watchdog_interrupt(void) __interrupt(8);
 
 #endif

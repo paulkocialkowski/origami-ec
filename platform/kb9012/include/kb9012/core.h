@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Paul Kocialkowski <contact@paulk.fr>
+ * Copyright (C) 2015-2018 Paul Kocialkowski <contact@paulk.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,8 +29,11 @@
  * Registers
  */
 
+__sfr __at(0x80) P0IE;
 __sfr __at(0x86) PCON2;
 __sfr __at(0xb0) P3IE;
+
+#define CLK32CR							0xfe8a
 
 #define EC_FV							0xff01
 #define EC_PMUCFG						0xff0c
@@ -40,6 +43,8 @@ __sfr __at(0xb0) P3IE;
  * Values
  */
 
+#define P0IE_WATCHDOG						(1 << 0)
+
 #define PCON2_EXTERNAL_MODULES_ENABLE				(1 << 4)
 
 #define PCON_STOP_ENABLE					(1 << 1)
@@ -47,6 +52,9 @@ __sfr __at(0xb0) P3IE;
 
 #define IE_ALL_ENABLE						(1 << 7)
 #define IE_SERIAL_ENABLE					(1 << 4)
+
+#define CLK32CR_SOURCE_INTERNAL					(1 << 2)
+#define CLK32CR_INTERNAL_ENABLE					(1 << 1)
 
 #define EC_PMUCFG_STOP						(1 << 7)
 #define EC_PMUCFG_IDLE						(1 << 6)
