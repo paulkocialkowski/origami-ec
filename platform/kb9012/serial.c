@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015-2017 Paul Kocialkowski <contact@paulk.fr>
+ * Copyright (C) 2015-2018 Paul Kocialkowski <contact@paulk.fr>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,19 +46,16 @@ static inline void serial_interrupt_disable(void)
 signed char serial_send(char c)
 {
 	unsigned char index;
+	signed char rc;
 
-	while (!(sizeof(serial_send_buffer) - serial_send_count)) ;
-
-	/* Let the buffer clear out on new line. */
-	if (c == '\n')
-		while (serial_send_busy) ;
+	while (serial_send_count == sizeof(serial_send_buffer)) ;
 
 	serial_interrupt_disable();
 
 	if (serial_send_busy) {
 		/* Buffer overflow. */
 		if (serial_send_count == sizeof(serial_send_buffer))
-			goto complete;
+			goto error;
 
 		index = (serial_send_start + serial_send_count);
 		if (index >= sizeof(serial_send_buffer))
@@ -71,17 +68,23 @@ signed char serial_send(char c)
 		SBUF = c;
 	}
 
+	rc = 0;
+	goto complete;
+
+error:
+	rc = -1;
+
 complete:
 	serial_interrupt_enable();
 
-	return 0;
+	return rc;
 }
 
 char serial_recv(void)
 {
 	char c;
 
-	while (!serial_recv_count) ;
+	while (serial_recv_count == 0) ;
 
 	serial_interrupt_disable();
 
