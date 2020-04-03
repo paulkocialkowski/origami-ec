@@ -14,35 +14,6 @@ later.
 The project initially supports platforms based on the 8051 CPU, but more
 platforms might be added in the future through distinct codebases.
 
-Origami-EC is an affiliated project of the Embedded Freedom initiative.
-
-The website for the project is located at:
-<https://projects.embedded-freedom.org/origami-ec/>
-
-## Assumptions
-
-Origami-EC aims at being flexible and supporting various different embedded
-controllers platforms and devices, by clearly separating the common,
-platform-specific and device-specific code.
-
-However, it is assumed that target platforms are 8051-based. In particular, the
-code is optimized for 8-bit processors.
-
-## Supported Devices
-
-Origami-EC currently supports the following device(s):
-
-* G505s (Lenovo)
-
-Support for these devices is still work in progress: it is not ready for daily
-use!
-
-## Supported Platforms
-
-Origami-EC currently supports the following platform(s):
-
-* KB9012 (ENE)
-
 ## Contributions
 
 ### Coding Style
@@ -56,10 +27,11 @@ to the whole code base.
 Changes to the Origami-EC code base can be submitted and integrated to its
 source tree after a code review process.
 
-These changes should be submitted as email-formatted git patches to
-origami-ec@lists.embedded-freedom.org with the maintainers concerned by the
-change added in copy. The code review then takes places publicly on the mailing
-list.
-
 A Signed-Off-By line is required for each proposed change, as a way to approve
 the Developer Certificate of Origin <https://developercertificate.org/>.
+
+## Compatibility
+
+Origami-EC aims at being flexible and supporting various different embedded
+controllers platforms and devices, by clearly separating the common,
+platform-specific and device-specific code.
